@@ -1,5 +1,2 @@
-from collections import deque
-
-q = deque([])
-a = q.popleft()
-print(a)
+s = "abcd"
+print(list(map(str, s)))
