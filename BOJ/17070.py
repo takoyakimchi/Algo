@@ -1,5 +1,6 @@
 from collections import deque
 import sys
+
 input = sys.stdin.readline
 
 N = int(input())
@@ -7,52 +8,39 @@ graph = []
 for _ in range(N):
     graph.append(list(map(int, input().split())))
 
-def bfs(head, tail):
-    queue = deque([(head, tail)])
-    count = 0
-    while queue:
-        ((headX, headY), (tailX, tailY)) = queue.popleft()
-        if (headX, headY) == (N-1, N-1):
-            count += 1
+# 가로 세로 대각
+dp = [[[0, 0, 0] for _ in range(N)] for _ in range(N)]
 
-        # 가로
-        if headX == tailX:
-            # 가로로 이동
-            if (headY + 1) < N:
-                if graph[headX][headY + 1] != 1:
-                    queue.append(((headX, headY + 1), (headX, headY)))
-            # 대각선 이동
-            if (headX + 1) < N and (headY + 1) < N:
-                if graph[headX][headY + 1] != 1 and graph[headX + 1][headY] != 1 and graph[headX + 1][headY + 1] != 1:
-                    queue.append(((headX + 1, headY + 1), (headX, headY)))
-        # 세로
-        elif headY == tailY:
-            # 세로로 이동
-            if (headX + 1) < N:
-                if graph[headX + 1][headY] != 1:
-                    queue.append(((headX + 1, headY), (headX, headY)))
-            # 대각선 이동
-            if (headX + 1) < N and (headY + 1) < N:
-                if graph[headX][headY + 1] != 1 and graph[headX + 1][headY] != 1 and graph[headX + 1][headY + 1] != 1:
-                    queue.append(((headX + 1, headY + 1), (headX, headY)))
-        # 대각선
-        else:
-            # 가로로 이동
-            if (headY + 1) < N:
-                if graph[headX][headY + 1] != 1:
-                    queue.append(((headX, headY + 1), (headX, headY)))
-            # 세로로 이동
-            if (headX + 1) < N:
-                if graph[headX + 1][headY] != 1:
-                    queue.append(((headX + 1, headY), (headX, headY)))
-            # 대각선 이동
-            if (headX + 1) < N and (headY + 1) < N:
-                if graph[headX][headY + 1] != 1 and graph[headX + 1][headY] != 1 and graph[headX + 1][headY + 1] != 1:
-                    queue.append(((headX + 1, headY + 1), (headX, headY)))
+dp[0][1] = [1, 0, 0]
 
-    return count
-
-if graph[N-1][N-1] == 1:
-    print(0)
-else:
-    print(bfs((0, 1), (0, 0)))
+for i in range(0, N):
+    for j in range(1, N):
+        if sum(dp[i][j]) > 0:
+            # 가로
+            if dp[i][j][0] > 0:
+                # 가로
+                if j + 1 < N and graph[i][j + 1] == 0:
+                    dp[i][j + 1][0] += dp[i][j][0]
+                # 대각선
+                if i + 1 < N and j + 1 < N and graph[i + 1][j] == graph[i][j + 1] == graph[i + 1][j + 1] == 0:
+                    dp[i+1][j+1][2] += dp[i][j][0]
+            # 세로
+            if dp[i][j][1] > 0:
+                # 세로
+                if i + 1 < N and graph[i+1][j] == 0:
+                    dp[i+1][j][1] += dp[i][j][1]
+                # 대각선
+                if i + 1 < N and j + 1 < N and graph[i + 1][j] == graph[i][j + 1] == graph[i + 1][j + 1] == 0:
+                    dp[i + 1][j + 1][2] += dp[i][j][1]
+            # 대각선
+            if dp[i][j][2] > 0:
+                # 가로
+                if j + 1 < N and graph[i][j + 1] == 0:
+                    dp[i][j + 1][0] += dp[i][j][2]
+                # 세로
+                if i + 1 < N and graph[i + 1][j] == 0:
+                    dp[i + 1][j][1] += dp[i][j][2]
+                # 대각선
+                if i + 1 < N and j + 1 < N and graph[i + 1][j] == graph[i][j + 1] == graph[i + 1][j + 1] == 0:
+                    dp[i + 1][j + 1][2] += dp[i][j][2]
+print(sum(dp[N-1][N-1]))
