@@ -1,2 +1,2 @@
-s = "abcd"
-print(list(map(str, s)))
+from itertools import combinations
+
