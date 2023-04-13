@@ -1,7 +1,6 @@
 x = int(input())
 dp = [0] * (x+1)    # dp[0] ~ dp[x]
-nums = [[] for _ in range(x+1)]
-nums[x].append(x)
+before_num = [0] * (x+1)
 INF = 10 ** 10
 
 for i in range(x-1, 0, -1):
@@ -23,13 +22,20 @@ for i in range(x-1, 0, -1):
     min_idx = ls.index(answer)
 
     if min_idx == 0:
-        nums[i] = nums[i+1] + [i]
+        before_num[i] = i + 1
     elif min_idx == 1:
-        nums[i] = nums[i*2] + [i]
+        before_num[i] = i * 2
     elif min_idx == 2:
-        nums[i] = nums[i*3] + [i]
+        before_num[i] = i * 3
 
     dp[i] = answer + 1
 
 print(dp[1])
-print(*nums[1])
+
+nums = []
+current_num = 1
+while current_num != x:
+    nums.append(current_num)
+    current_num = before_num[current_num]
+
+print(*reversed(nums))
