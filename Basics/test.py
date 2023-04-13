@@ -1,3 +1,1 @@
-s = "aaa-bbb"
-a, b = s.split('-')
-print(a)
+print(100//50)
