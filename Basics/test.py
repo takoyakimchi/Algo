@@ -1,1 +1,3 @@
-print(eval("3 4+2 5"))
+s = "aaa-bbb"
+a, b = s.split('-')
+print(a)
