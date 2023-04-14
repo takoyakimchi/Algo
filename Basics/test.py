@@ -1,2 +1,2 @@
-for _ in range(2000):
-    print(1, end=' ')
+q = [0.2, 2]
+print(q)
